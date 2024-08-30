@@ -25,7 +25,10 @@ app_ui = ui.page_fluid(
                 "select_municipality",
                 "Selecione o Municipio: ",
                 choices = get_municipality_by_state(list_municipios, "sp")
-            )
+            ),
+            ui.output_text("perc_secoes_concluidas"),
+            ui.output_text("numero_eleitorado"),
+            ui.output_text("numero_votos_validos")
         ),
         ui.column(
             9,
@@ -49,6 +52,19 @@ def server(input, output, session):
         )
 
     ret_dict = reactive.value(get_municipios_data(ano="2022", cod_cargo="0001", cod_eleicao="544", cod_mun_tse="85995", env="oficial", state="rs"))
+
+    @render.text
+    def perc_secoes_concluidas():
+        return f"Percentual de seções totalizadas: {ret_dict()['pst']} %"
+    
+    @render.text
+    def numero_eleitorado():
+        return f"Total de votantes: {ret_dict()['e']}"
+    
+    @render.text
+    def numero_votos_validos():
+        return f"Total de votos válidos: {ret_dict()['vv']}"
+
 
     @render.text
     def diff():
