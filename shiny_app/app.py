@@ -14,6 +14,17 @@ list_states = group_states_by_region(copy.deepcopy(list_municipios))
 app_ui = ui.page_fluid(
     ui.row(
         ui.column(
+            9,
+            ui.h1("Apuração Eleições 2024", style="align:center")
+        ),
+        ui.column(
+            3,
+            ui.output_text("next_update_in")
+        )   
+    ),
+    ui.hr(),
+    ui.row(
+        ui.column(
             3,
             ui.input_select(
                 "select_state",
@@ -33,7 +44,6 @@ app_ui = ui.page_fluid(
         ui.column(
             9,
             ui.output_text_verbatim("txt"),
-            ui.output_text_verbatim("diff"),
         )
     )
     
@@ -67,13 +77,13 @@ def server(input, output, session):
 
 
     @render.text
-    def diff():
+    def next_update_in():
 
         reactive.invalidate_later(1)
 
         minutes, seconds = calculate_time_difference(ret_dict()['timestamp'], refresh_time=refresh_time)
 
-        return f"Difference: {minutes} and {seconds} seconds"
+        return f"Próxima atualização: {minutes}m e {seconds}s"
 
 
     @render.text
