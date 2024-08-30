@@ -1,0 +1,16 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+.DS_Store
+
+data/raw/
+
+shiny_bookmarks/
+
+.Renviron
+
+eleicoes_2024/
+
+__pycache__/
