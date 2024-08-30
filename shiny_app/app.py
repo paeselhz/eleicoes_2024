@@ -17,7 +17,7 @@ app_ui = ui.page_fluid(
     ui.row(
         ui.column(
             9,
-            ui.h1("Apuração Eleições 2024", style="align:center")
+            ui.h1("Apuração Eleições 2024")
         ),
         ui.column(
             3,

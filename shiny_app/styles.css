@@ -1,3 +1,12 @@
 .bslib-value-box .value-box-value {
     font-size: 1.2rem;
 }
+
+h1, .h1 {
+    text-align:center;
+    padding-top: 2%;
+}
+
+#next_update_in {
+    padding-top: 10%;
+}
