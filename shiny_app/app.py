@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 import copy
 from datetime import datetime
 from functions.utils import *
@@ -12,6 +13,7 @@ list_states = group_states_by_region(copy.deepcopy(list_municipios))
 
 
 app_ui = ui.page_fluid(
+    ui.include_css(Path(__file__).parent / 'styles.css'),
     ui.row(
         ui.column(
             9,
@@ -40,8 +42,42 @@ app_ui = ui.page_fluid(
                 multiple=False
             ),
             ui.output_text("perc_secoes_concluidas"),
-            ui.output_text("numero_eleitorado"),
-            ui.output_text("numero_votos_validos")
+            ui.layout_column_wrap(
+                ui.value_box(
+                    "Número de Eleitores",
+                    ui.output_text("numero_eleitorado"),
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                ),
+                ui.value_box(
+                    "Abstenções",
+                    ui.output_text("abstencoes"),
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                )
+            ),
+            ui.layout_column_wrap(
+                ui.value_box(
+                    "Número de Votos Válidos",
+                    ui.output_text("numero_votos_validos"),
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                )
+            ),
+            ui.layout_column_wrap(
+                ui.value_box(
+                    "Votos Nulos",
+                    ui.output_text("votos_nulos"),
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                ),
+                ui.value_box(
+                    "Votos Brancos",
+                    ui.output_text("votos_brancos"),
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                )
+            )
         ),
         ui.column(
             9,
@@ -85,11 +121,23 @@ def server(input, output, session):
     
     @render.text
     def numero_eleitorado():
-        return f"Total de votantes: {data_prefeito()['e']}"
+        return f"{data_prefeito()['e']}"
     
     @render.text
     def numero_votos_validos():
-        return f"Total de votos válidos: {data_prefeito()['vv']}"
+        return f"{data_prefeito()['vv']}"
+    
+    @render.text
+    def abstencoes():
+        return f"{data_prefeito()['pa']}% ({data_prefeito()['a']} eleitores)"
+    
+    @render.text
+    def votos_brancos():
+        return f"{data_prefeito()['pvb']}% ({data_prefeito()['vb']} eleitores)"
+    
+    @render.text
+    def votos_nulos():
+        return f"{data_prefeito()['ptvn']}% ({data_prefeito()['vn']} eleitores)"
 
 
     @render.text
