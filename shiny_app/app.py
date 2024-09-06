@@ -143,7 +143,6 @@ def server(input, output, session):
     def modal_link():
         return f"https://paeselhz.github.io/eleicoes_2024/?uf={input.select_state()}&mu={input.select_municipality()}"
 
-
     @render.text
     def next_update_in():
 
@@ -257,6 +256,7 @@ def server(input, output, session):
                     "https://via.placeholder.com/60",
                     cand["n"] + " - " + cand["st"],
                     float(cand["pvap"].replace(",", ".")),
+                    int(cand["vap"]),
                 )
             )
             for cand in sort_prefeito
@@ -271,6 +271,7 @@ def server(input, output, session):
                     "https://via.placeholder.com/60",
                     cand["n"] + " - " + cand["st"],
                     float(cand["pvap"].replace(",", ".")),
+                    int(cand["vap"]),
                 )
             )
             for cand in sort_vereador

@@ -171,7 +171,9 @@ def get_municipios_data(
     return dados_mun
 
 
-def card_candidato(img_candidato: str, name_candidato: str, progress: float):
+def card_candidato(
+    img_candidato: str, name_candidato: str, progress: float, votos: int
+):
 
     html_string = f"""
         <div class="card-candidato">
@@ -180,7 +182,7 @@ def card_candidato(img_candidato: str, name_candidato: str, progress: float):
             <h3>{name_candidato}</h3>
             <div class="progress-bar-container">
                 <div class="progress-bar" style="width:{progress}%;"></div>
-                <span class="progress-value">{progress}%</span>
+                <span class="progress-value">{votos:,} votos - {progress}%</span>
             </div>
         </div>
     </div>
