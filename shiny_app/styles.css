@@ -22,13 +22,13 @@ h1, .h1 {
 /* Prefeito column */
 
 .column-prefeito {
-    border: 1px solid #e6e6e6;
+    border: 1px solid #ccc;
 }
 
 /* Vereador column */
 
 .column-vereador {
-    border: 1px solid #e6e6e6;
+    border: 1px solid #ccc;
 }
 
 /* Card Candidato CSS */
@@ -38,7 +38,7 @@ h1, .h1 {
     justify-content: space-between;
     padding: 10px;
     margin: 10px;
-    border: 1px solid #e6e6e6;
+    border: 1px solid #ccc;
     border-radius: 8px;
     width: 80%;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -56,7 +56,7 @@ h1, .h1 {
 .card-candidato-content {
     display: flex;
     flex-direction: column;
-    width: 70%; /* Adjusted to make space for the status */
+    width: 70%;
 }
 
 .card-candidato-content h3 {
@@ -99,4 +99,51 @@ h1, .h1 {
 
 .not-elected {
     background-color: orange;
+}
+
+/* Card secoes */
+
+.card-secoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 90%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    position: relative;
+}
+
+.card-secoes-content {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+.card-secoes-content h3 {
+    margin: 0;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.progress-bar-container-secoes {
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 8px;
+    position: relative;
+    height: 20px;
+}
+
+.progress-bar-secoes {
+    height: 100%;
+    background-color: rgba(135, 196, 158, 1);
+    width: 0%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 20px;
 }

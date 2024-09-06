@@ -168,3 +168,18 @@ def card_candidato(img_candidato: str, name_candidato: str, progress: float):
     </div>
     """
     return html_string
+
+
+def card_secoes(progress: float):
+
+    html_string = f"""
+        <div class="card-secoes">
+        <div class="card-secoes-content">
+            <h3>Percentual de seções totalizadas</h3>
+            <div class="progress-bar-container-secoes">
+                <div class="progress-bar-secoes" style="width:{progress}%;">{progress}%</div>
+            </div>
+        </div>
+        </div>
+    """
+    return html_string

@@ -36,46 +36,11 @@ app_ui = ui.page_fluid(
                 choices=get_municipality_by_state(list_municipios, "sp"),
                 multiple=False,
             ),
-            ui.output_text("perc_secoes_concluidas"),
-            ui.layout_column_wrap(
-                ui.value_box(
-                    "Número de Eleitores",
-                    ui.output_text("numero_eleitorado"),
-                    theme="bg-gradient-orange-red",
-                    full_screen=False,
-                ),
-                ui.value_box(
-                    "Abstenções",
-                    ui.output_text("abstencoes"),
-                    theme="bg-gradient-orange-red",
-                    full_screen=False,
-                ),
-            ),
-            ui.layout_column_wrap(
-                ui.value_box(
-                    "Número de Votos Válidos",
-                    ui.output_text("numero_votos_validos"),
-                    theme="bg-gradient-orange-red",
-                    full_screen=False,
-                )
-            ),
-            ui.layout_column_wrap(
-                ui.value_box(
-                    "Votos Nulos",
-                    ui.output_text("votos_nulos"),
-                    theme="bg-gradient-orange-red",
-                    full_screen=False,
-                ),
-                ui.value_box(
-                    "Votos Brancos",
-                    ui.output_text("votos_brancos"),
-                    theme="bg-gradient-orange-red",
-                    full_screen=False,
-                ),
-            ),
+            ui.output_ui("side_cards_kpi"),
         ),
         ui.column(
             9,
+            ui.output_ui("perc_secoes_card"),
             ui.row(
                 ui.column(
                     6,
@@ -92,6 +57,7 @@ app_ui = ui.page_fluid(
                 class_="g-5",
             ),
         ),
+        class_="g-5",
     ),
 )
 
@@ -124,34 +90,15 @@ def server(input, output, session):
     def _():
         selected_state = input.select_state()
 
-        ui.update_selectize(
-            "select_municipality",
-            choices=get_municipality_by_state(list_municipios, selected_state),
-        )
+        if selected_state != "":
+            ui.update_selectize(
+                "select_municipality",
+                choices=get_municipality_by_state(list_municipios, selected_state),
+            )
 
-    @render.text
-    def perc_secoes_concluidas():
-        return f"Percentual de seções totalizadas: {data_prefeito()['pst']} %"
-
-    @render.text
-    def numero_eleitorado():
-        return f"{data_prefeito()['e']}"
-
-    @render.text
-    def numero_votos_validos():
-        return f"{data_prefeito()['vv']}"
-
-    @render.text
-    def abstencoes():
-        return f"{data_prefeito()['pa']}% ({data_prefeito()['a']} eleitores)"
-
-    @render.text
-    def votos_brancos():
-        return f"{data_prefeito()['pvb']}% ({data_prefeito()['vb']} eleitores)"
-
-    @render.text
-    def votos_nulos():
-        return f"{data_prefeito()['ptvn']}% ({data_prefeito()['vn']} eleitores)"
+    @render.ui
+    def perc_secoes_card():
+        return ui.HTML(card_secoes(float(data_prefeito()["pst"].replace(",", "."))))
 
     @render.text
     def next_update_in():
@@ -193,6 +140,51 @@ def server(input, output, session):
             )
         )
         return f"{data_vereador()['timestamp']}"
+
+    @render.text
+    def votos_nulos():
+        return
+
+    @render.ui
+    def side_cards_kpi():
+        return [
+            ui.layout_column_wrap(
+                ui.value_box(
+                    "Número de Eleitores",
+                    f"{int(data_prefeito()['e']):,}",
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                ),
+                ui.value_box(
+                    "Abstenções",
+                    f"{data_prefeito()['pa']}% ({int(data_prefeito()['a']):,} eleitores)",
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                ),
+            ),
+            ui.layout_column_wrap(
+                ui.value_box(
+                    "Número de Votos Válidos",
+                    f"{int(data_prefeito()['vv']):,}",
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                )
+            ),
+            ui.layout_column_wrap(
+                ui.value_box(
+                    "Votos Nulos",
+                    f"{data_prefeito()['ptvn']}% ({int(data_prefeito()['vn']):,} eleitores)",
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                ),
+                ui.value_box(
+                    "Votos Brancos",
+                    f"{data_prefeito()['pvb']}% ({int(data_prefeito()['vb']):,} eleitores)",
+                    theme="bg-gradient-orange-red",
+                    full_screen=False,
+                ),
+            ),
+        ]
 
     @render.ui
     def prefeito_ui():
