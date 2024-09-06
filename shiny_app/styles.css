@@ -108,7 +108,8 @@ h1, .h1 {
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    margin: 10px;
+    margin: 0 auto;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
     width: 90%;
@@ -120,7 +121,7 @@ h1, .h1 {
 .card-secoes-content {
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 100%;
 }
 
 .card-secoes-content h3 {
