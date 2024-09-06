@@ -2,7 +2,9 @@ import copy
 import json
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
+from functions.icons import *
 from functions.utils import *
 from shiny import App, reactive, render, ui
 
@@ -16,8 +18,14 @@ list_states = group_states_by_region(copy.deepcopy(list_municipios))
 app_ui = ui.page_fluid(
     ui.include_css(Path(__file__).parent / "styles.css"),
     ui.row(
-        ui.column(9, ui.h1("Apuração Eleições 2024")),
+        ui.column(
+            3,
+            # ui.input_action_button("share_button", "Compartilhe...", icon=share_icon),
+            class_="d-flex justify-content-center",
+        ),
+        ui.column(6, ui.h1("Apuração Eleições 2024")),
         ui.column(3, ui.output_text("next_update_in")),
+        style="margin-top:1rem;",
     ),
     ui.hr(),
     ui.row(
@@ -44,20 +52,21 @@ app_ui = ui.page_fluid(
             ui.row(
                 ui.column(
                     6,
+                    ui.h3("Prefeito"),
                     ui.output_text_verbatim("refresh_prefeito"),
                     ui.output_ui("prefeito_ui"),
                     class_="col-sm-6 column-prefeito",
                 ),
                 ui.column(
                     6,
+                    ui.h3("Vereador"),
                     ui.output_text_verbatim("refresh_vereador"),
                     ui.output_ui("vereador_ui"),
                     class_="col-sm-6 column-vereador",
                 ),
-                class_="g-5",
+                style="height: 70vh;",
             ),
         ),
-        class_="g-5",
     ),
 )
 
@@ -78,16 +87,39 @@ def server(input, output, session):
     data_vereador = reactive.value(
         get_municipios_data(
             ano="2022",
-            cod_cargo="0001",
-            cod_eleicao="545",
+            cod_cargo="0003",
+            cod_eleicao="546",
             cod_mun_tse="85995",
             env="oficial",
             state="rs",
         )
     )
 
+    # @reactive.effect
+    # def _():
+    #     # parsing url inputs
+    #     url_query_inputs = session.input['.clientdata_url_search']()
+
+    #     print(url_query_inputs)
+
+    #     parsed_qs = parse_qs(urlparse(url_query_inputs).query)
+
+    #     if parsed_qs.get('uf') is not None:
+    #         ui.update_selectize(
+    #             'select_state',
+    #             selected = parsed_qs['uf'][0]
+    #         )
+
+    #     if parsed_qs.get('mu') is not None:
+    #         ui.update_selectize(
+    #             'select_municipality',
+    #             selected = parsed_qs['mu'][0]
+    #         )
+
     @reactive.effect
+    @reactive.event(input.select_state)
     def _():
+        # dinamically updating list of municipalities per state
         selected_state = input.select_state()
 
         if selected_state != "":
@@ -96,9 +128,21 @@ def server(input, output, session):
                 choices=get_municipality_by_state(list_municipios, selected_state),
             )
 
-    @render.ui
-    def perc_secoes_card():
-        return ui.HTML(card_secoes(float(data_prefeito()["pst"].replace(",", "."))))
+    @reactive.effect
+    @reactive.event(input.share_button)
+    def _():
+        share_modal = ui.modal(
+            ui.output_text_verbatim("modal_link"),
+            title="Compartilhe!",
+            easy_close=True,
+            footer=None,
+        )
+        ui.modal_show(share_modal)
+
+    @render.text
+    def modal_link():
+        return f"https://paeselhz.github.io/eleicoes_2024/?uf={input.select_state()}&mu={input.select_municipality()}"
+
 
     @render.text
     def next_update_in():
@@ -132,18 +176,14 @@ def server(input, output, session):
         data_vereador.set(
             get_municipios_data(
                 ano="2022",
-                cod_cargo="0001",
-                cod_eleicao="545",
+                cod_cargo="0003",
+                cod_eleicao="546",
                 cod_mun_tse=input.select_municipality(),
                 env="oficial",
                 state=input.select_state(),
             )
         )
         return f"{data_vereador()['timestamp']}"
-
-    @render.text
-    def votos_nulos():
-        return
 
     @render.ui
     def side_cards_kpi():
@@ -152,13 +192,13 @@ def server(input, output, session):
                 ui.value_box(
                     "Número de Eleitores",
                     f"{int(data_prefeito()['e']):,}",
-                    theme="bg-gradient-orange-red",
+                    theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
                 ui.value_box(
                     "Abstenções",
                     f"{data_prefeito()['pa']}% ({int(data_prefeito()['a']):,} eleitores)",
-                    theme="bg-gradient-orange-red",
+                    theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
             ),
@@ -166,7 +206,7 @@ def server(input, output, session):
                 ui.value_box(
                     "Número de Votos Válidos",
                     f"{int(data_prefeito()['vv']):,}",
-                    theme="bg-gradient-orange-red",
+                    theme="bg-gradient-purple-teal",
                     full_screen=False,
                 )
             ),
@@ -174,51 +214,66 @@ def server(input, output, session):
                 ui.value_box(
                     "Votos Nulos",
                     f"{data_prefeito()['ptvn']}% ({int(data_prefeito()['vn']):,} eleitores)",
-                    theme="bg-gradient-orange-red",
+                    theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
                 ui.value_box(
                     "Votos Brancos",
                     f"{data_prefeito()['pvb']}% ({int(data_prefeito()['vb']):,} eleitores)",
-                    theme="bg-gradient-orange-red",
+                    theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
             ),
         ]
 
     @render.ui
+    def perc_secoes_card():
+
+        selected_state = input.select_state()
+        selected_mun = input.select_municipality()
+
+        try:
+            name_mun = (
+                get_municipality_by_state(list_municipios, selected_state)[selected_mun]
+                + " - "
+                + selected_state.upper()
+            )
+        except:
+            name_mun = ""
+
+        return ui.HTML(
+            card_secoes(
+                f"Percentual de seções totalizadas: {name_mun}",
+                float(data_prefeito()["pst"].replace(",", ".")),
+            )
+        )
+
+    @render.ui
     def prefeito_ui():
+        sort_prefeito = sorted(data_prefeito()["cand"], key=lambda x: int(x["seq"]))
         return [
             ui.HTML(
                 card_candidato(
-                    "https://via.placeholder.com/60", "Candidato Prefeito 1", 55
+                    "https://via.placeholder.com/60",
+                    cand["n"] + " - " + cand["st"],
+                    float(cand["pvap"].replace(",", ".")),
                 )
-            ),
-            ui.HTML(
-                card_candidato(
-                    "https://via.placeholder.com/60", "Candidato Prefeito 2", 45
-                )
-            ),
+            )
+            for cand in sort_prefeito
         ]
 
     @render.ui
     def vereador_ui():
+        sort_vereador = sorted(data_vereador()["cand"], key=lambda x: int(x["seq"]))
         return [
             ui.HTML(
                 card_candidato(
-                    "https://via.placeholder.com/60", "Candidato Vereador 1", 42
+                    "https://via.placeholder.com/60",
+                    cand["n"] + " - " + cand["st"],
+                    float(cand["pvap"].replace(",", ".")),
                 )
-            ),
-            ui.HTML(
-                card_candidato(
-                    "https://via.placeholder.com/60", "Candidato Vereador 2", 31
-                )
-            ),
-            ui.HTML(
-                card_candidato(
-                    "https://via.placeholder.com/60", "Candidato Vereador 3", 27
-                )
-            ),
+            )
+            for cand in sort_vereador
         ]
 
 

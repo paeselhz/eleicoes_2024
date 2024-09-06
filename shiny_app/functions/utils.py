@@ -4,6 +4,19 @@ from typing import Dict, List
 import requests
 from shiny import ui
 
+empty_dict = {
+    "pst": "0",
+    "e": 0,
+    "pa": 0,
+    "a": 0,
+    "vv": 0,
+    "ptvn": 0,
+    "vn": 0,
+    "pvb": 0,
+    "vb": 0,
+    "cand": [],
+}
+
 
 def calculate_time_difference(input_time, refresh_time):
     timestamp = datetime.fromisoformat(input_time)
@@ -125,7 +138,7 @@ def get_municipality_by_state(list_mun, selected_state: str):
 
 def get_municipios_data(
     cod_eleicao: str,
-    cod_mun_tse: int,
+    cod_mun_tse: str,
     cod_cargo: str,
     state: str,
     env: str = "oficial",
@@ -142,7 +155,8 @@ def get_municipios_data(
         req_tse_dict = req_tse.json()  # Directly parse JSON response
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
-        return {}  # Return empty dict on failure
+        empty_dict["timestamp"] = datetime.now().isoformat()
+        return empty_dict  # Return empty dict on failure
 
     dados_mun = next(
         (x for x in req_tse_dict.get("abr", []) if x.get("tpabr") == "MU"), {}
@@ -150,6 +164,9 @@ def get_municipios_data(
     if dados_mun:
         dados_mun["md"] = req_tse_dict.get("md")
         dados_mun["timestamp"] = datetime.now().isoformat()
+    else:
+        empty_dict["timestamp"] = datetime.now().isoformat()
+        return empty_dict
 
     return dados_mun
 
@@ -162,7 +179,8 @@ def card_candidato(img_candidato: str, name_candidato: str, progress: float):
         <div class="card-candidato-content">
             <h3>{name_candidato}</h3>
             <div class="progress-bar-container">
-                <div class="progress-bar" style="width:{progress}%;">{progress}%</div>
+                <div class="progress-bar" style="width:{progress}%;"></div>
+                <span class="progress-value">{progress}%</span>
             </div>
         </div>
     </div>
@@ -170,12 +188,12 @@ def card_candidato(img_candidato: str, name_candidato: str, progress: float):
     return html_string
 
 
-def card_secoes(progress: float):
+def card_secoes(title: str, progress: float):
 
     html_string = f"""
         <div class="card-secoes">
         <div class="card-secoes-content">
-            <h3>Percentual de seções totalizadas</h3>
+            <h3>{title}</h3>
             <div class="progress-bar-container-secoes">
                 <div class="progress-bar-secoes" style="width:{progress}%;">{progress}%</div>
             </div>
