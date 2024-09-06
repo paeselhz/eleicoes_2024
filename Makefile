@@ -19,7 +19,8 @@ run:
 .PHONY: build_shinylive
 build_shinylive:
 	shinylive export shiny_app docs
-	python3 -m http.server --directory docs --bind localhost 8080
+	sed -i '' 's/<title>Shiny App<\/title>/<title>Eleições - 2024<\/title>/' docs/index.html
+	python3 -m http.server --directory docs --bind 127.0.0.1 8080
 
 .PHONY: clean
 clean:
