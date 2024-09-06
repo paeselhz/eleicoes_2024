@@ -19,6 +19,18 @@ h1, .h1 {
     padding-top: 10%;
 }
 
+/* Prefeito column */
+
+.column-prefeito {
+    border: 1px solid #ccc;
+}
+
+/* Vereador column */
+
+.column-vereador {
+    border: 1px solid #ccc;
+}
+
 /* Card Candidato CSS */
 .card-candidato {
     display: flex;
