@@ -4,7 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-import pyperclip
+import pyperclip3
 from functions.icons import *
 from functions.utils import *
 from shiny import App, reactive, render, ui
@@ -145,7 +145,7 @@ def server(input, output, session):
     @reactive.effect
     @reactive.event(input.copy_link)
     def copy_link():
-        pyperclip.copy(
+        pyperclip3.copy(
             f"https://paeselhz.github.io/eleicoes_2024/?uf={input.select_state()}&mu={input.select_municipality()}"
         )
 

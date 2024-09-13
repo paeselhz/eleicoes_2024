@@ -1,2 +1,2 @@
 requests==2.32.3
-pyperclip==1.9.0
+pyperclip3==0.4.1
