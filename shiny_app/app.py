@@ -4,7 +4,6 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-import pyperclip3
 from functions.icons import *
 from functions.utils import *
 from shiny import App, reactive, render, ui
@@ -20,9 +19,7 @@ app_ui = ui.page_fluid(
     ui.include_css(Path(__file__).parent / "styles.css"),
     ui.row(
         ui.column(
-            3,
-            ui.input_action_button("share_button", "Compartilhe...", icon=share_icon),
-            class_="d-flex justify-content-center",
+            3
         ),
         ui.column(6, ui.h1("Apuração Eleições 2024")),
         ui.column(3, ui.output_text("next_update_in")),
@@ -95,61 +92,18 @@ def server(input, output, session):
             state="rs",
         )
     )
-    onstartup = reactive.value(True)
 
     @reactive.effect
     @reactive.event(input.select_state)
     def _():
         selected_state = input.select_state()
 
-        url_query_inputs = session.input[".clientdata_url_search"]()
+        if selected_state != "":
+            ui.update_selectize(
+               "select_municipality",
+                choices=get_municipality_by_state(list_municipios, selected_state),
+            )
 
-        parsed_qs = parse_qs(urlparse(url_query_inputs).query)
-
-        if onstartup():
-            if parsed_qs.get("uf") is not None:
-                ui.update_selectize("select_state", selected=parsed_qs["uf"][0])
-            else:
-                onstartup.set(False)
-            if parsed_qs.get("mu") is not None:
-                ui.update_selectize(
-                    "select_municipality",
-                    selected=parsed_qs["mu"][0],
-                    choices=get_municipality_by_state(list_municipios, selected_state),
-                )
-                if selected_state == parsed_qs["uf"][0]:
-                    onstartup.set(False)
-        else:
-            if selected_state != "":
-                ui.update_selectize(
-                    "select_municipality",
-                    choices=get_municipality_by_state(list_municipios, selected_state),
-                )
-
-    @reactive.effect
-    @reactive.event(input.share_button)
-    def _():
-        share_modal = ui.modal(
-            ui.row(
-                ui.column(12, ui.output_text_verbatim("modal_link")),
-                # ui.column(4, ui.input_action_button("copy_link", "Copiar link!")),
-            ),
-            title="Compartilhe!",
-            easy_close=True,
-            footer=None,
-        )
-        ui.modal_show(share_modal)
-
-    @render.text
-    def modal_link():
-        return f"https://paeselhz.github.io/eleicoes_2024/?uf={input.select_state()}&mu={input.select_municipality()}"
-
-    @reactive.effect
-    @reactive.event(input.copy_link)
-    def copy_link():
-        pyperclip3.copy(
-            f"https://paeselhz.github.io/eleicoes_2024/?uf={input.select_state()}&mu={input.select_municipality()}"
-        )
 
     @render.text
     def next_update_in():
