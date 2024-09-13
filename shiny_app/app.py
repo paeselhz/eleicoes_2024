@@ -109,6 +109,8 @@ def server(input, output, session):
         if onstartup():
             if parsed_qs.get("uf") is not None:
                 ui.update_selectize("select_state", selected=parsed_qs["uf"][0])
+            else:
+                onstartup.set(False)
             if parsed_qs.get("mu") is not None:
                 ui.update_selectize(
                     "select_municipality",
