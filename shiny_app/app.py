@@ -129,8 +129,8 @@ def server(input, output, session):
     def _():
         share_modal = ui.modal(
             ui.row(
-                ui.column(8, ui.output_text_verbatim("modal_link")),
-                ui.column(4, ui.input_action_button("copy_link", "Copiar link!")),
+                ui.column(12, ui.output_text_verbatim("modal_link")),
+                # ui.column(4, ui.input_action_button("copy_link", "Copiar link!")),
             ),
             title="Compartilhe!",
             easy_close=True,
