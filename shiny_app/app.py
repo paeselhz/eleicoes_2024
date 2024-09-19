@@ -74,9 +74,9 @@ def server(input, output, session):
     # app starter
     data_prefeito = reactive.value(
         get_municipios_data(
-            ano="2022",
-            cod_cargo="0001",
-            cod_eleicao="544",
+            ano="2024",
+            cod_cargo="0011",
+            cod_eleicao="619",
             cod_mun_tse="85995",
             env="oficial",
             state="rs",
@@ -84,9 +84,9 @@ def server(input, output, session):
     )
     data_vereador = reactive.value(
         get_municipios_data(
-            ano="2022",
-            cod_cargo="0003",
-            cod_eleicao="546",
+            ano="2024",
+            cod_cargo="0013",
+            cod_eleicao="619",
             cod_mun_tse="85995",
             env="oficial",
             state="rs",
@@ -121,9 +121,9 @@ def server(input, output, session):
         reactive.invalidate_later(refresh_time)
         data_prefeito.set(
             get_municipios_data(
-                ano="2022",
-                cod_cargo="0001",
-                cod_eleicao="544",
+                ano="2024",
+                cod_cargo="0011",
+                cod_eleicao="619",
                 cod_mun_tse=input.select_municipality(),
                 env="oficial",
                 state=input.select_state(),
@@ -136,9 +136,9 @@ def server(input, output, session):
         reactive.invalidate_later(refresh_time)
         data_vereador.set(
             get_municipios_data(
-                ano="2022",
-                cod_cargo="0003",
-                cod_eleicao="546",
+                ano="2024",
+                cod_cargo="0013",
+                cod_eleicao="619",
                 cod_mun_tse=input.select_municipality(),
                 env="oficial",
                 state=input.select_state(),
@@ -152,13 +152,13 @@ def server(input, output, session):
             ui.layout_column_wrap(
                 ui.value_box(
                     "Número de Eleitores",
-                    f"{int(data_prefeito()['e']):,}",
+                    f"{int(data_prefeito()['e']['te']):,}",
                     theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
                 ui.value_box(
                     "Abstenções",
-                    f"{data_prefeito()['pa']}% ({int(data_prefeito()['a']):,} eleitores)",
+                    f"{data_prefeito()['e']['pa']}% ({int(data_prefeito()['e']['a']):,} eleitores)",
                     theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
@@ -166,7 +166,7 @@ def server(input, output, session):
             ui.layout_column_wrap(
                 ui.value_box(
                     "Número de Votos Válidos",
-                    f"{int(data_prefeito()['vv']):,}",
+                    f"{int(data_prefeito()['v']['vv']):,}",
                     theme="bg-gradient-purple-teal",
                     full_screen=False,
                 )
@@ -174,13 +174,13 @@ def server(input, output, session):
             ui.layout_column_wrap(
                 ui.value_box(
                     "Votos Nulos",
-                    f"{data_prefeito()['ptvn']}% ({int(data_prefeito()['vn']):,} eleitores)",
+                    f"{data_prefeito()['v']['pvtn']}% ({int(data_prefeito()['v']['vn']):,} eleitores)",
                     theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
                 ui.value_box(
                     "Votos Brancos",
-                    f"{data_prefeito()['pvb']}% ({int(data_prefeito()['vb']):,} eleitores)",
+                    f"{data_prefeito()['v']['pvb']}% ({int(data_prefeito()['v']['vb']):,} eleitores)",
                     theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),
@@ -205,7 +205,7 @@ def server(input, output, session):
         return ui.HTML(
             card_secoes(
                 f"Percentual de seções totalizadas: {name_mun}",
-                float(data_prefeito()["pst"].replace(",", ".")),
+                float(data_prefeito()["s"]["pst"].replace(",", ".")),
             )
         )
 

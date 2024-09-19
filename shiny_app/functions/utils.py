@@ -5,16 +5,20 @@ import requests
 from shiny import ui
 
 empty_dict = {
-    "pst": "0",
-    "e": 0,
-    "pa": 0,
-    "a": 0,
-    "vv": 0,
-    "ptvn": 0,
-    "vn": 0,
-    "pvb": 0,
-    "vb": 0,
-    "cand": [],
+    "s": {"pst": "0"},
+    "e": {
+        "te": 0,
+        "a": 0,
+        "pa": 0,
+    },
+    "v": {
+        "vv": 0,
+        "pvtn": 0,
+        "vn": 0,
+        "pvb": 0,
+        "vb": 0,
+    },
+    "cand": []
 }
 
 
@@ -32,11 +36,11 @@ def calculate_time_difference(input_time, refresh_time):
 
 
 def get_config_municipios(
-    cod_eleicao: str = "544", env: str = "oficial", ano: str = "2022"
+    base_url:str = "https://resultados.tse.jus.br", cod_eleicao: str = "544", env: str = "oficial", ano: str = "2022"
 ) -> List[Dict]:
-    base_url = "https://resultados.tse.jus.br"
+    
     req_url = (
-        f"{base_url}/{env}/ele{ano}/{cod_eleicao}/config/mun-e000{cod_eleicao}-cm.json"
+        f"{base_url}/{env}/ele{ano}/{cod_eleicao}/config/mun-e{cod_eleicao.zfill(6)}-cm.json"
     )
 
     try:
@@ -50,6 +54,14 @@ def get_config_municipios(
     list_mun = req_tse_dict.get("abr", [])
     return list_mun
 
+def handle_failure():
+    return {**empty_dict, "timestamp": datetime.now().isoformat()}
+
+def create_cand_structure(cand):
+    # Simplify the creation of candidate structure
+    ret_dict = cand["par"][0]["cand"]
+    ret_dict_partido = [{**cand_dict, "nm_partido": cand["nm"]} for cand_dict in ret_dict]
+    return ret_dict_partido
 
 def remove_municipality_from_states(list_mun):
     for state_dict in list_mun:
@@ -101,7 +113,7 @@ def group_states_by_region(list_mun_og):
 
     for state_dict in list_mun:
         state_code = state_dict.get("cd")  # Assuming 'cd' is the state code
-        region = state_to_region.get(state_code, "Unknown")
+        region = state_to_region.get(state_code.upper(), "Unknown")
 
         # Only add to the region if it's recognized
         if region != "Unknown":
@@ -123,7 +135,6 @@ def group_states_by_region(list_mun_og):
 
     return transformed_dict
 
-
 def get_municipality_by_state(list_mun, selected_state: str):
 
     state = next((x for x in list_mun if x.get("cd") == selected_state.upper()), {})
@@ -141,35 +152,31 @@ def get_municipios_data(
     cod_mun_tse: str,
     cod_cargo: str,
     state: str,
+    base_url:str = "https://resultados.tse.jus.br",
     env: str = "oficial",
     ano: str = "2022",
 ) -> Dict:
-    base_url = "https://resultados.tse.jus.br"
     state = state.lower()
 
-    req_url = f"{base_url}/{env}/ele{ano}/{cod_eleicao}/dados/{state}/{state}{cod_mun_tse}-c{cod_cargo}-e000{cod_eleicao}-v.json"
+    req_url = f"{base_url}/{env}/ele{ano}/{cod_eleicao}/dados/{state}/{state}{cod_mun_tse}-c{cod_cargo}-e{cod_eleicao.zfill(6)}-u.json"
 
     try:
         req_tse = requests.get(req_url)
-        req_tse.raise_for_status()  # Check if the request was successful
-        req_tse_dict = req_tse.json()  # Directly parse JSON response
+        req_tse.raise_for_status()
+        req_tse_dict = req_tse.json()
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
-        empty_dict["timestamp"] = datetime.now().isoformat()
-        return empty_dict  # Return empty dict on failure
+        return handle_failure()
 
-    dados_mun = next(
-        (x for x in req_tse_dict.get("abr", []) if x.get("tpabr") == "MU"), {}
-    )
-    if dados_mun:
-        dados_mun["md"] = req_tse_dict.get("md")
-        dados_mun["timestamp"] = datetime.now().isoformat()
+    if req_tse_dict:
+        list_cand_partidos = [create_cand_structure(candidate) for candidate in req_tse_dict["carg"][0]["agr"]]
+        req_tse_dict["cand"] = [item for sublist in list_cand_partidos for item in sublist]
+        req_tse_dict["timestamp"] = datetime.now().isoformat()
+        del req_tse_dict["carg"]
     else:
-        empty_dict["timestamp"] = datetime.now().isoformat()
-        return empty_dict
+        return handle_failure()
 
-    return dados_mun
-
+    return req_tse_dict
 
 def card_candidato(
     img_candidato: str, name_candidato: str, progress: float, votos: int
