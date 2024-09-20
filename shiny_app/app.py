@@ -8,6 +8,10 @@ from functions.icons import *
 from functions.utils import *
 from shiny import App, reactive, render, ui
 
+url_tse = "https://resultados-sim.tse.jus.br"
+env_tse = "simulado"
+ele_tse = "10143"
+
 refresh_time = 90  # seconds
 
 list_municipios = get_config_municipios()
@@ -76,9 +80,10 @@ def server(input, output, session):
         get_municipios_data(
             ano="2024",
             cod_cargo="0011",
-            cod_eleicao="619",
+            cod_eleicao=ele_tse,
             cod_mun_tse="85995",
-            env="oficial",
+            env=env_tse,
+            base_url=url_tse,
             state="rs",
         )
     )
@@ -86,9 +91,10 @@ def server(input, output, session):
         get_municipios_data(
             ano="2024",
             cod_cargo="0013",
-            cod_eleicao="619",
+            cod_eleicao=ele_tse,
             cod_mun_tse="85995",
-            env="oficial",
+            env=env_tse,
+            base_url=url_tse,
             state="rs",
         )
     )
@@ -123,9 +129,10 @@ def server(input, output, session):
             get_municipios_data(
                 ano="2024",
                 cod_cargo="0011",
-                cod_eleicao="619",
+                cod_eleicao=ele_tse,
                 cod_mun_tse=input.select_municipality(),
-                env="oficial",
+                env=env_tse,
+                base_url=url_tse,
                 state=input.select_state(),
             )
         )
@@ -138,9 +145,10 @@ def server(input, output, session):
             get_municipios_data(
                 ano="2024",
                 cod_cargo="0013",
-                cod_eleicao="619",
+                cod_eleicao=ele_tse,
                 cod_mun_tse=input.select_municipality(),
-                env="oficial",
+                env=env_tse,
+                base_url=url_tse,
                 state=input.select_state(),
             )
         )
@@ -174,7 +182,7 @@ def server(input, output, session):
             ui.layout_column_wrap(
                 ui.value_box(
                     "Votos Nulos",
-                    f"{data_prefeito()['v']['pvtn']}% ({int(data_prefeito()['v']['vn']):,} eleitores)",
+                    f"{data_prefeito()['v']['ptvn']}% ({int(data_prefeito()['v']['vn']):,} eleitores)",
                     theme="bg-gradient-purple-teal",
                     full_screen=False,
                 ),

@@ -13,7 +13,7 @@ empty_dict = {
     },
     "v": {
         "vv": 0,
-        "pvtn": 0,
+        "ptvn": 0,
         "vn": 0,
         "pvb": 0,
         "vb": 0,
