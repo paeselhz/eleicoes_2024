@@ -68,6 +68,10 @@ h1, .h1 {
 .card-candidato-content h3 {
     margin: 0;
     font-size: 1.2em;
+    white-space: nowrap;      /* Prevents the text from wrapping to the next line */
+    overflow: hidden;         /* Ensures the overflowed text is hidden */
+    text-overflow: ellipsis;  /* Adds '...' at the end of the overflowing text */
+    max-width: 70%;          /* Set a max width so the ellipsis appears when the name is too long */
 }
 
 .progress-bar-container {
@@ -93,14 +97,30 @@ h1, .h1 {
     line-height: 20px;
 }
 
-.status {
+.status-label {
     position: absolute;
     top: 10px;
     right: 10px;
-    padding: 5px 10px;
+    padding: 4px 8px;
     border-radius: 5px;
-    font-weight: bold;
+    font-size: 12px;
     color: white;
+}
+
+.status-label.eleito {
+    background-color: green;
+}
+
+.status-label.não-eleito {
+    background-color: red;
+}
+
+.status-label.eleito-por-qp {
+    background-color: blue;
+}
+
+.status-label.eleito-por-média {
+    background-color: orange;
 }
 
 /* Card secoes */

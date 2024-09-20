@@ -137,7 +137,7 @@ def group_states_by_region(list_mun_og):
 
 def get_municipality_by_state(list_mun, selected_state: str):
 
-    state = next((x for x in list_mun if x.get("cd") == selected_state.upper()), {})
+    state = next((x for x in list_mun if x.get("cd").upper() == selected_state.upper()), {})
 
     ret_dict = {}
 
@@ -179,20 +179,23 @@ def get_municipios_data(
     return req_tse_dict
 
 def card_candidato(
-    img_candidato: str, name_candidato: str, progress: float, votos: int
+    img_candidato: str, name_candidato: str, progress: float, votos: int, status: str
 ):
-
     html_string = f"""
         <div class="card-candidato">
-        <img src="{img_candidato}" alt="Candidate Image">
-        <div class="card-candidato-content">
-            <h3>{name_candidato}</h3>
-            <div class="progress-bar-container">
-                <div class="progress-bar" style="width:{progress}%;"></div>
-                <span class="progress-value">{votos:,} votos - {progress}%</span>
+            <img src="{img_candidato}" alt="Candidate Image">
+            <div class="card-candidato-content">
+                <h3>{name_candidato} 
+                    <span class="status-label {status.lower().replace(' ', '-')}">
+                        {status}
+                    </span>
+                </h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width:{progress}%;"></div>
+                    <span class="progress-value">{votos:,} votos - {progress}%</span>
+                </div>
             </div>
         </div>
-    </div>
     """
     return html_string
 
@@ -207,6 +210,27 @@ def card_secoes(title: str, progress: float):
                 <div class="progress-bar-secoes" style="width:{progress}%;">{progress}%</div>
             </div>
         </div>
+        </div>
+    """
+    return html_string
+
+
+def card_md(status: str):
+    icons = {
+        "e": "🟢",  
+        "s": "🟡",  
+        "n": "⚪"      
+    }
+    
+    icon = icons.get(status, icons["n"])
+
+    html_string = f"""
+        <div class="card-secoes">
+            <div class="card-secoes-content">
+                <div class="status-container">
+                    Matematicamente Definido: <span class="status-icon">{icon}</span>
+                </div>
+            </div>
         </div>
     """
     return html_string

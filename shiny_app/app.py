@@ -14,7 +14,12 @@ ele_tse = "10143"
 
 refresh_time = 90  # seconds
 
-list_municipios = get_config_municipios()
+list_municipios = get_config_municipios(
+    ano="2024",
+    base_url=url_tse,
+    cod_eleicao=ele_tse,
+    env=env_tse
+)
 
 list_states = group_states_by_region(copy.deepcopy(list_municipios))
 
@@ -23,7 +28,8 @@ app_ui = ui.page_fluid(
     ui.include_css(Path(__file__).parent / "styles.css"),
     ui.row(
         ui.column(
-            3
+            3,
+            ui.h3("AMBIENTE SIMULADO DO TSE")
         ),
         ui.column(6, ui.h1("Apuração Eleições 2024")),
         ui.column(3, ui.output_text("next_update_in")),
@@ -50,7 +56,16 @@ app_ui = ui.page_fluid(
         ),
         ui.column(
             9,
-            ui.output_ui("perc_secoes_card"),
+            ui.row(
+                ui.column(
+                    9,
+                    ui.output_ui("perc_secoes_card"),
+                ),
+                ui.column(
+                    3,
+                    ui.output_ui("md_card")
+                )
+            ),
             ui.row(
                 ui.column(
                     6,
@@ -216,6 +231,12 @@ def server(input, output, session):
                 float(data_prefeito()["s"]["pst"].replace(",", ".")),
             )
         )
+    
+    @render.ui
+    def md_card():
+        return ui.HTML(
+            card_md(data_prefeito().get("md", "n"))
+        )
 
     @render.ui
     def prefeito_ui():
@@ -223,10 +244,11 @@ def server(input, output, session):
         return [
             ui.HTML(
                 card_candidato(
-                    "https://via.placeholder.com/60",
-                    cand["n"] + " - " + cand["st"],
+                    f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
+                    cand["n"] + " - " + cand["nm"],
                     float(cand["pvap"].replace(",", ".")),
                     int(cand["vap"]),
+                    cand["st"]
                 )
             )
             for cand in sort_prefeito
@@ -238,10 +260,11 @@ def server(input, output, session):
         return [
             ui.HTML(
                 card_candidato(
-                    "https://via.placeholder.com/60",
-                    cand["n"] + " - " + cand["st"],
+                    f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
+                    cand["n"] + " - " + cand["nm"],
                     float(cand["pvap"].replace(",", ".")),
                     int(cand["vap"]),
+                    cand["st"]
                 )
             )
             for cand in sort_vereador
