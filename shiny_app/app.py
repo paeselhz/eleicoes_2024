@@ -1,5 +1,5 @@
 import copy
-import json
+import locale
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -8,6 +8,8 @@ from functions.icons import *
 from functions.utils import *
 from shiny import App, reactive, render, ui
 
+locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
+
 url_tse = "https://resultados-sim.tse.jus.br"
 env_tse = "simulado"
 ele_tse = "10143"
@@ -15,10 +17,7 @@ ele_tse = "10143"
 refresh_time = 90  # seconds
 
 list_municipios = get_config_municipios(
-    ano="2024",
-    base_url=url_tse,
-    cod_eleicao=ele_tse,
-    env=env_tse
+    ano="2024", base_url=url_tse, cod_eleicao=ele_tse, env=env_tse
 )
 
 list_states = group_states_by_region(copy.deepcopy(list_municipios))
@@ -27,10 +26,7 @@ list_states = group_states_by_region(copy.deepcopy(list_municipios))
 app_ui = ui.page_fluid(
     ui.include_css(Path(__file__).parent / "styles.css"),
     ui.row(
-        ui.column(
-            3,
-            ui.h3("AMBIENTE SIMULADO DO TSE")
-        ),
+        ui.column(3, ui.h3("AMBIENTE SIMULADO DO TSE")),
         ui.column(6, ui.h1("Apuração Eleições 2024")),
         ui.column(3, ui.output_text("next_update_in")),
         style="margin-top:1rem;",
@@ -61,23 +57,18 @@ app_ui = ui.page_fluid(
                     9,
                     ui.output_ui("perc_secoes_card"),
                 ),
-                ui.column(
-                    3,
-                    ui.output_ui("md_card")
-                )
+                ui.column(3, ui.output_ui("md_card")),
             ),
             ui.row(
                 ui.column(
                     6,
                     ui.h3("Prefeito"),
-                    ui.output_text_verbatim("refresh_prefeito"),
                     ui.output_ui("prefeito_ui"),
                     class_="col-sm-6 column-prefeito",
                 ),
                 ui.column(
                     6,
                     ui.h3("Vereador"),
-                    ui.output_text_verbatim("refresh_vereador"),
                     ui.output_ui("vereador_ui"),
                     class_="col-sm-6 column-vereador",
                 ),
@@ -85,6 +76,7 @@ app_ui = ui.page_fluid(
             ),
         ),
     ),
+    ui.output_ui("footer_update"),
 )
 
 
@@ -121,10 +113,9 @@ def server(input, output, session):
 
         if selected_state != "":
             ui.update_selectize(
-               "select_municipality",
+                "select_municipality",
                 choices=get_municipality_by_state(list_municipios, selected_state),
             )
-
 
     @render.text
     def next_update_in():
@@ -136,38 +127,6 @@ def server(input, output, session):
         )
 
         return f"Próxima atualização: {minutes}m e {seconds}s"
-
-    @render.text
-    def refresh_prefeito():
-        reactive.invalidate_later(refresh_time)
-        data_prefeito.set(
-            get_municipios_data(
-                ano="2024",
-                cod_cargo="0011",
-                cod_eleicao=ele_tse,
-                cod_mun_tse=input.select_municipality(),
-                env=env_tse,
-                base_url=url_tse,
-                state=input.select_state(),
-            )
-        )
-        return f"{data_prefeito()['timestamp']}"
-
-    @render.text
-    def refresh_vereador():
-        reactive.invalidate_later(refresh_time)
-        data_vereador.set(
-            get_municipios_data(
-                ano="2024",
-                cod_cargo="0013",
-                cod_eleicao=ele_tse,
-                cod_mun_tse=input.select_municipality(),
-                env=env_tse,
-                base_url=url_tse,
-                state=input.select_state(),
-            )
-        )
-        return f"{data_vereador()['timestamp']}"
 
     @render.ui
     def side_cards_kpi():
@@ -231,12 +190,10 @@ def server(input, output, session):
                 float(data_prefeito()["s"]["pst"].replace(",", ".")),
             )
         )
-    
+
     @render.ui
     def md_card():
-        return ui.HTML(
-            card_md(data_prefeito().get("md", "n"))
-        )
+        return ui.HTML(card_md(data_prefeito().get("md", "n")))
 
     @render.ui
     def prefeito_ui():
@@ -248,7 +205,7 @@ def server(input, output, session):
                     cand["n"] + " - " + cand["nm"],
                     float(cand["pvap"].replace(",", ".")),
                     int(cand["vap"]),
-                    cand["st"]
+                    cand["st"],
                 )
             )
             for cand in sort_prefeito
@@ -264,11 +221,49 @@ def server(input, output, session):
                     cand["n"] + " - " + cand["nm"],
                     float(cand["pvap"].replace(",", ".")),
                     int(cand["vap"]),
-                    cand["st"]
+                    cand["st"],
                 )
             )
             for cand in sort_vereador
         ]
+
+    @render.ui
+    def footer_update():
+
+        reactive.invalidate_later(refresh_time)
+        data_prefeito.set(
+            get_municipios_data(
+                ano="2024",
+                cod_cargo="0011",
+                cod_eleicao=ele_tse,
+                cod_mun_tse=input.select_municipality(),
+                env=env_tse,
+                base_url=url_tse,
+                state=input.select_state(),
+            )
+        )
+
+        data_vereador.set(
+            get_municipios_data(
+                ano="2024",
+                cod_cargo="0013",
+                cod_eleicao=ele_tse,
+                cod_mun_tse=input.select_municipality(),
+                env=env_tse,
+                base_url=url_tse,
+                state=input.select_state(),
+            )
+        )
+
+        datetime_readable = datetime.fromisoformat(
+            data_prefeito()["timestamp"]
+        ).strftime("%d de %B de %Y às %H:%M:%S")
+
+        return ui.HTML(
+            f"""
+            <footer> Última atualização: {datetime_readable}
+            """
+        )
 
 
 app = App(app_ui, server)

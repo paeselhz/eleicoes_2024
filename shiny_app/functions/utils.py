@@ -18,7 +18,7 @@ empty_dict = {
         "pvb": 0,
         "vb": 0,
     },
-    "cand": []
+    "cand": [],
 }
 
 
@@ -36,12 +36,13 @@ def calculate_time_difference(input_time, refresh_time):
 
 
 def get_config_municipios(
-    base_url:str = "https://resultados.tse.jus.br", cod_eleicao: str = "544", env: str = "oficial", ano: str = "2022"
+    base_url: str = "https://resultados.tse.jus.br",
+    cod_eleicao: str = "544",
+    env: str = "oficial",
+    ano: str = "2022",
 ) -> List[Dict]:
-    
-    req_url = (
-        f"{base_url}/{env}/ele{ano}/{cod_eleicao}/config/mun-e{cod_eleicao.zfill(6)}-cm.json"
-    )
+
+    req_url = f"{base_url}/{env}/ele{ano}/{cod_eleicao}/config/mun-e{cod_eleicao.zfill(6)}-cm.json"
 
     try:
         req_tse = requests.get(req_url)
@@ -54,14 +55,19 @@ def get_config_municipios(
     list_mun = req_tse_dict.get("abr", [])
     return list_mun
 
+
 def handle_failure():
     return {**empty_dict, "timestamp": datetime.now().isoformat()}
+
 
 def create_cand_structure(cand):
     # Simplify the creation of candidate structure
     ret_dict = cand["par"][0]["cand"]
-    ret_dict_partido = [{**cand_dict, "nm_partido": cand["nm"]} for cand_dict in ret_dict]
+    ret_dict_partido = [
+        {**cand_dict, "nm_partido": cand["nm"]} for cand_dict in ret_dict
+    ]
     return ret_dict_partido
+
 
 def remove_municipality_from_states(list_mun):
     for state_dict in list_mun:
@@ -135,9 +141,12 @@ def group_states_by_region(list_mun_og):
 
     return transformed_dict
 
+
 def get_municipality_by_state(list_mun, selected_state: str):
 
-    state = next((x for x in list_mun if x.get("cd").upper() == selected_state.upper()), {})
+    state = next(
+        (x for x in list_mun if x.get("cd").upper() == selected_state.upper()), {}
+    )
 
     ret_dict = {}
 
@@ -152,7 +161,7 @@ def get_municipios_data(
     cod_mun_tse: str,
     cod_cargo: str,
     state: str,
-    base_url:str = "https://resultados.tse.jus.br",
+    base_url: str = "https://resultados.tse.jus.br",
     env: str = "oficial",
     ano: str = "2022",
 ) -> Dict:
@@ -169,14 +178,20 @@ def get_municipios_data(
         return handle_failure()
 
     if req_tse_dict:
-        list_cand_partidos = [create_cand_structure(candidate) for candidate in req_tse_dict["carg"][0]["agr"]]
-        req_tse_dict["cand"] = [item for sublist in list_cand_partidos for item in sublist]
+        list_cand_partidos = [
+            create_cand_structure(candidate)
+            for candidate in req_tse_dict["carg"][0]["agr"]
+        ]
+        req_tse_dict["cand"] = [
+            item for sublist in list_cand_partidos for item in sublist
+        ]
         req_tse_dict["timestamp"] = datetime.now().isoformat()
         del req_tse_dict["carg"]
     else:
         return handle_failure()
 
     return req_tse_dict
+
 
 def card_candidato(
     img_candidato: str, name_candidato: str, progress: float, votos: int, status: str
@@ -216,12 +231,8 @@ def card_secoes(title: str, progress: float):
 
 
 def card_md(status: str):
-    icons = {
-        "e": "🟢",  
-        "s": "🟡",  
-        "n": "⚪"      
-    }
-    
+    icons = {"e": "🟢", "s": "🟡", "n": "🔴"}
+
     icon = icons.get(status, icons["n"])
 
     html_string = f"""
