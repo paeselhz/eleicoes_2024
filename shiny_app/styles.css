@@ -129,6 +129,10 @@ h1, .h1 {
     background-color: orange;
 }
 
+.status-label.suplente {
+    background-color: purple;
+}
+
 /* Card secoes */
 
 .card-secoes {

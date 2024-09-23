@@ -232,6 +232,7 @@ def card_secoes(title: str, progress: float):
 
 def card_md(status: str):
     icons = {"e": "🟢", "s": "🟡", "n": "🔴"}
+    status_str = {"e": "Definido", "s": "2º Turno", "n": "Não Definido"}
 
     icon = icons.get(status, icons["n"])
 
@@ -240,6 +241,8 @@ def card_md(status: str):
             <div class="card-secoes-content">
                 <div class="status-container">
                     Matematicamente Definido: <span class="status-icon">{icon}</span>
+                    <br>
+                    <div style="display:block; text-align:center;"">{status_str.get(status, status_str["n"])}</div>
                 </div>
             </div>
         </div>
