@@ -201,7 +201,7 @@ def card_candidato(
             <img src="{img_candidato}" alt="Candidate Image">
             <div class="card-candidato-content">
                 <h3>{name_candidato} 
-                    <span class="status-label {status.lower().replace(' ', '-')}">
+                    <span class="status-label {status.lower().replace(' ', '-').replace('2º', 'segundo')}">
                         {status}
                     </span>
                 </h3>

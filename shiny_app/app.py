@@ -10,9 +10,9 @@ from shiny import App, reactive, render, ui
 
 locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
 
-url_tse = "https://resultados-sim.tse.jus.br"
-env_tse = "simulado"
-ele_tse = "10143"
+url_tse = "https://resultados.tse.jus.br"
+env_tse = "oficial"
+ele_tse = "619"
 
 refresh_time = 90  # seconds
 

@@ -63,12 +63,13 @@ h1, .h1 {
     height: 60px;
     border-radius: 50%;
     margin-right: 5px;
+    object-fit: cover;
 }
 
 .card-candidato-content {
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 80%;
 }
 
 .card-candidato-content h3 {
@@ -115,6 +116,10 @@ h1, .h1 {
 
 .status-label.eleito {
     background-color: green;
+}
+
+.status-label.segundo-turno {
+    background-color: orange;
 }
 
 .status-label.não-eleito {
