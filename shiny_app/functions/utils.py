@@ -151,7 +151,7 @@ def get_municipality_by_state(list_mun, selected_state: str):
     ret_dict = {}
 
     for city in state["mu"]:
-        ret_dict[city["cd"]] = city["nm"]
+        ret_dict[city["cd"]] = city["nm"].replace("&apos;", "'")
 
     return ret_dict
 

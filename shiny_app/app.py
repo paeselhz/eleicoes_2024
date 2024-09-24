@@ -26,7 +26,10 @@ list_states = group_states_by_region(copy.deepcopy(list_municipios))
 app_ui = ui.page_fluid(
     ui.include_css(Path(__file__).parent / "styles.css"),
     ui.row(
-        ui.column(3, ui.h3("AMBIENTE SIMULADO DO TSE")),
+        ui.column(
+            3,
+            #   ui.h3("AMBIENTE SIMULADO DO TSE")
+        ),
         ui.column(6, ui.h1("Apuração Eleições 2024")),
         ui.column(3, ui.output_text("next_update_in")),
         style="margin-top:1rem;",
