@@ -21,6 +21,7 @@ empty_dict = {
     "cand": [],
 }
 
+empty_dict_mun = [{"cd": "", "ds": "", "mu": [{"cd":"", "nm":""}]}]
 
 def calculate_time_difference(input_time, refresh_time):
     timestamp = datetime.fromisoformat(input_time)
@@ -50,7 +51,7 @@ def get_config_municipios(
         req_tse_dict = req_tse.json()  # Directly parse JSON response
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
-        return []  # Return empty list on failure
+        return empty_dict_mun  # Return empty list on failure
 
     list_mun = req_tse_dict.get("abr", [])
     return list_mun
@@ -148,10 +149,13 @@ def get_municipality_by_state(list_mun, selected_state: str):
         (x for x in list_mun if x.get("cd").upper() == selected_state.upper()), {}
     )
 
-    ret_dict = {}
+    if not state:
+        ret_dict = {}
+    else:
+        ret_dict = {}
 
-    for city in state["mu"]:
-        ret_dict[city["cd"]] = city["nm"].replace("&apos;", "'")
+        for city in state["mu"]:
+            ret_dict[city["cd"]] = city["nm"].replace("&apos;", "'")
 
     return ret_dict
 
