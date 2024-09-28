@@ -204,9 +204,9 @@ def card_candidato(
 ):
     html_string = f"""
         <div class="card-candidato">
-            
+            <a href="{url_candcontas}" target="_blank">
                 <img src="{img_candidato}" alt="Candidate Image">
-           
+           </a>
             <div class="card-candidato-content">
                 <h3>{name_candidato} 
                     <span class="status-label {status.lower().replace(' ', '-').replace('2º', 'segundo')}">

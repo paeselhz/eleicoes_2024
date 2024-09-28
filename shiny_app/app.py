@@ -201,15 +201,15 @@ def server(input, output, session):
 
     @render.ui
     def prefeito_ui():
-        selected_municipality = input.select_municipality()
-        selected_state = input.selected_state()
-        region = find_region(selected_state, list_states)
+        mun = input.select_municipality()
+        st = input.select_state()
+        region = find_region(st, list_states)
         sort_prefeito = sorted(data_prefeito()["cand"], key=lambda x: int(x["seq"]))
         return [
             ui.HTML(
                 card_candidato(
-                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{selected_state.upper()}/2045202024/{cand['sqcand']}/2024/{selected_municipality}",
-                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
+                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}",
+                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg",
                     name_candidato = cand["n"] + " - " + cand["nm"],
                     progress = float(cand["pvap"].replace(",", ".")),
                     votos = int(cand["vap"]),
@@ -221,15 +221,15 @@ def server(input, output, session):
 
     @render.ui
     def vereador_ui():
-        selected_municipality = input.select_municipality()
-        selected_state = input.selected_state()
-        region = find_region(selected_state, list_states)
+        mun = input.select_municipality()
+        st = input.select_state()
+        region = find_region(st, list_states)
         sort_vereador = sorted(data_vereador()["cand"], key=lambda x: int(x["seq"]))
         return [
             ui.HTML(
                 card_candidato(
-                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{selected_state.upper()}/2045202024/{cand['sqcand']}/2024/{selected_municipality}",
-                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
+                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}",
+                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg",
                     name_candidato = cand["n"] + " - " + cand["nm"],
                     progress = float(cand["pvap"].replace(",", ".")),
                     votos = int(cand["vap"]),
@@ -266,9 +266,6 @@ def server(input, output, session):
                 state=input.select_state(),
             )
         )
-
-        with open("test.json", "w") as file:
-            json.dump(data_prefeito(), file, indent = 4)
 
         datetime_readable = datetime.fromisoformat(
             data_prefeito()["timestamp"]
