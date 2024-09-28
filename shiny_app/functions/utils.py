@@ -21,7 +21,8 @@ empty_dict = {
     "cand": [],
 }
 
-empty_dict_mun = [{"cd": "", "ds": "", "mu": [{"cd":"", "nm":""}]}]
+empty_dict_mun = [{"cd": "", "ds": "", "mu": [{"cd": "", "nm": ""}]}]
+
 
 def calculate_time_difference(input_time, refresh_time):
     timestamp = datetime.fromisoformat(input_time)
