@@ -1,4 +1,5 @@
 import copy
+import json
 import locale
 from datetime import datetime
 from pathlib import Path
@@ -10,9 +11,9 @@ from shiny import App, reactive, render, ui
 
 locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
 
-url_tse = "https://resultados.tse.jus.br"
-env_tse = "oficial"
-ele_tse = "619"
+url_tse = "https://resultados-sim.tse.jus.br"
+env_tse = "simulado"
+ele_tse = "10143"
 
 refresh_time = 90  # seconds
 
@@ -200,15 +201,19 @@ def server(input, output, session):
 
     @render.ui
     def prefeito_ui():
+        selected_municipality = input.select_municipality()
+        selected_state = input.selected_state()
+        region = find_region(selected_state, list_states)
         sort_prefeito = sorted(data_prefeito()["cand"], key=lambda x: int(x["seq"]))
         return [
             ui.HTML(
                 card_candidato(
-                    f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
-                    cand["n"] + " - " + cand["nm"],
-                    float(cand["pvap"].replace(",", ".")),
-                    int(cand["vap"]),
-                    cand["st"],
+                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{selected_state.upper()}/2045202024/{cand['sqcand']}/2024/{selected_municipality}",
+                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
+                    name_candidato = cand["n"] + " - " + cand["nm"],
+                    progress = float(cand["pvap"].replace(",", ".")),
+                    votos = int(cand["vap"]),
+                    status = cand["st"],
                 )
             )
             for cand in sort_prefeito
@@ -216,15 +221,19 @@ def server(input, output, session):
 
     @render.ui
     def vereador_ui():
+        selected_municipality = input.select_municipality()
+        selected_state = input.selected_state()
+        region = find_region(selected_state, list_states)
         sort_vereador = sorted(data_vereador()["cand"], key=lambda x: int(x["seq"]))
         return [
             ui.HTML(
                 card_candidato(
-                    f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
-                    cand["n"] + " - " + cand["nm"],
-                    float(cand["pvap"].replace(",", ".")),
-                    int(cand["vap"]),
-                    cand["st"],
+                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{selected_state.upper()}/2045202024/{cand['sqcand']}/2024/{selected_municipality}",
+                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{input.select_state()}/{cand['sqcand']}.jpeg",
+                    name_candidato = cand["n"] + " - " + cand["nm"],
+                    progress = float(cand["pvap"].replace(",", ".")),
+                    votos = int(cand["vap"]),
+                    status = cand["st"],
                 )
             )
             for cand in sort_vereador
@@ -257,6 +266,9 @@ def server(input, output, session):
                 state=input.select_state(),
             )
         )
+
+        with open("test.json", "w") as file:
+            json.dump(data_prefeito(), file, indent = 4)
 
         datetime_readable = datetime.fromisoformat(
             data_prefeito()["timestamp"]

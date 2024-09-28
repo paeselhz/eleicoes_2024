@@ -1,0 +1,243 @@
+{
+    "ele": "10143",
+    "t": "1",
+    "f": "s",
+    "sup": "n",
+    "tpabr": "mu",
+    "cdabr": "61018",
+    "dg": "26/09/2024",
+    "hg": "16:26:04",
+    "dv": "s",
+    "dt": "26/09/2024",
+    "ht": "15:31:10",
+    "tf": "s",
+    "and": "f",
+    "esae": "n",
+    "mnae": [],
+    "s": {
+        "ts": "86",
+        "st": "86",
+        "pst": "100,00",
+        "pstn": "100",
+        "snt": "0",
+        "psnt": "0,00",
+        "psntn": "0",
+        "si": "86",
+        "psi": "100,00",
+        "psin": "100",
+        "sni": "0",
+        "psni": "0,00",
+        "psnin": "0",
+        "sa": "86",
+        "psa": "100,00",
+        "psan": "100",
+        "sna": "0",
+        "psna": "0,00",
+        "psnan": "0"
+    },
+    "e": {
+        "te": "30128",
+        "est": "30128",
+        "pest": "100,00",
+        "pestn": "100",
+        "esnt": "0",
+        "pesnt": "0,00",
+        "pesntn": "0",
+        "esi": "30128",
+        "pesi": "100,00",
+        "pesin": "100",
+        "esni": "0",
+        "pesni": "0,00",
+        "pesnin": "0",
+        "esa": "30128",
+        "pesa": "100,00",
+        "pesan": "100",
+        "esna": "0",
+        "pesna": "0,00",
+        "pesnan": "0",
+        "c": "25647",
+        "pc": "85,13",
+        "pcn": "85,126792353",
+        "a": "4481",
+        "pa": "14,87",
+        "pan": "14,873207647"
+    },
+    "v": {
+        "tv": "25647",
+        "vvc": "19532",
+        "pvvc": "76,16",
+        "pvvcn": "76,157055406",
+        "vv": "16662",
+        "pvv": "85,31",
+        "pvvn": "85,306164243",
+        "vnom": "16662",
+        "pvnom": "100,00",
+        "pvnomn": "100",
+        "van": "0",
+        "pvan": "0,00",
+        "pvann": "0",
+        "vansj": "2870",
+        "pvansj": "14,69",
+        "pvansjn": "14,693835757",
+        "vb": "3216",
+        "pvb": "12,54",
+        "pvbn": "12,539478302",
+        "tvn": "2899",
+        "ptvn": "11,30",
+        "ptvnn": "11,303466292",
+        "vn": "2899",
+        "pvn": "100,00",
+        "pvnn": "100",
+        "vnt": "0",
+        "pvnt": "0,00",
+        "pvntn": "0",
+        "vscv": "0"
+    },
+    "cand": [
+        {
+            "n": "61",
+            "sqcand": "280012557149",
+            "nm": "CANDIDATO 61",
+            "nmu": "CANDIDATO 61",
+            "dt": "15/07/1992",
+            "dvt": "V\u00e1lido",
+            "seq": "1406",
+            "e": "n",
+            "st": "N\u00e3o eleito",
+            "vap": "3264",
+            "pvap": "16,71",
+            "pvapn": "16,711038296",
+            "vs": [
+                {
+                    "tp": "v",
+                    "sqcand": "280012557150",
+                    "nm": "CANDIDATO 61 1",
+                    "nmu": "CANDIDATO 61 1",
+                    "sgp": "P61"
+                }
+            ],
+            "nm_partido": "FEDERA\u00c7\u00c3O (P87/P61/P82)"
+        },
+        {
+            "n": "62",
+            "sqcand": "280012557711",
+            "nm": "CANDIDATO 62",
+            "nmu": "CANDIDATO 62",
+            "dt": "17/10/1923",
+            "dvt": "V\u00e1lido",
+            "seq": "1468",
+            "e": "n",
+            "st": "N\u00e3o eleito",
+            "vap": "2937",
+            "pvap": "15,04",
+            "pvapn": "15,036862584",
+            "vs": [
+                {
+                    "tp": "v",
+                    "sqcand": "280012557792",
+                    "nm": "CANDIDATO 62 1",
+                    "nmu": "CANDIDATO 62 1",
+                    "sgp": "P62"
+                }
+            ],
+            "nm_partido": "COLIGA\u00c7\u00c3O (P62/P69/P84)"
+        },
+        {
+            "n": "88",
+            "sqcand": "280012559029",
+            "nm": "CANDIDATO 88",
+            "nmu": "CANDIDATO 88",
+            "dt": "23/08/1989",
+            "dvt": "V\u00e1lido",
+            "seq": "1395",
+            "e": "n",
+            "st": "N\u00e3o eleito",
+            "vap": "3316",
+            "pvap": "16,98",
+            "pvapn": "16,977268073",
+            "vs": [
+                {
+                    "tp": "v",
+                    "sqcand": "280012559030",
+                    "nm": "CANDIDATO 88 1",
+                    "nmu": "CANDIDATO 88 1",
+                    "sgp": "P88"
+                }
+            ],
+            "nm_partido": "COLIGA\u00c7\u00c3O (P88/P89/P90)"
+        },
+        {
+            "n": "85",
+            "sqcand": "280012558419",
+            "nm": "CANDIDATO 85",
+            "nmu": "CANDIDATO 85",
+            "dt": "21/01/1986",
+            "dvt": "V\u00e1lido",
+            "seq": "1352",
+            "e": "n",
+            "st": "N\u00e3o eleito",
+            "vap": "3504",
+            "pvap": "17,94",
+            "pvapn": "17,939791112",
+            "vs": [
+                {
+                    "tp": "v",
+                    "sqcand": "280012558420",
+                    "nm": "CANDIDATO 85 1",
+                    "nmu": "CANDIDATO 85 1",
+                    "sgp": "P85"
+                }
+            ],
+            "nm_partido": "FEDERA\u00c7\u00c3O (P85/P64)"
+        },
+        {
+            "n": "58",
+            "sqcand": "280012555880",
+            "nm": "CANDIDATO 58",
+            "nmu": "CANDIDATO 58",
+            "dt": "15/02/1925",
+            "dvt": "Anulado sub judice",
+            "seq": "1482",
+            "e": "n",
+            "st": "N\u00e3o eleito",
+            "vap": "2870",
+            "pvap": "14,69",
+            "pvapn": "14,693835757",
+            "vs": [
+                {
+                    "tp": "v",
+                    "sqcand": "280012555881",
+                    "nm": "CANDIDATO 58 1",
+                    "nmu": "CANDIDATO 58 1",
+                    "sgp": "P58"
+                }
+            ],
+            "nm_partido": "PARTIDO 58"
+        },
+        {
+            "n": "59",
+            "sqcand": "280012556521",
+            "nm": "CANDIDATO 59",
+            "nmu": "CANDIDATO 59",
+            "dt": "17/06/1959",
+            "dvt": "V\u00e1lido",
+            "seq": "165",
+            "e": "s",
+            "st": "Eleito",
+            "vap": "3641",
+            "pvap": "18,64",
+            "pvapn": "18,641204178",
+            "vs": [
+                {
+                    "tp": "v",
+                    "sqcand": "280012556522",
+                    "nm": "CANDIDATO 59 1",
+                    "nmu": "CANDIDATO 59 1",
+                    "sgp": "P59"
+                }
+            ],
+            "nm_partido": "PARTIDO 59"
+        }
+    ],
+    "timestamp": "2024-09-28T10:06:24.757334"
+}
