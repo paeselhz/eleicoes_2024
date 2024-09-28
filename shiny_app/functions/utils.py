@@ -159,8 +159,9 @@ def get_municipality_by_state(list_mun, selected_state: str):
 def find_region(state_abbreviation: str, regions_dict: dict) -> str:
     for region, states in regions_dict.items():
         if state_abbreviation in states:
-            return region.replace('-', '').upper()
+            return region.replace("-", "").upper()
     return "State abbreviation not found."
+
 
 def get_municipios_data(
     cod_eleicao: str,
@@ -200,7 +201,12 @@ def get_municipios_data(
 
 
 def card_candidato(
-    url_candcontas: str, img_candidato: str, name_candidato: str, progress: float, votos: int, status: str
+    url_candcontas: str,
+    img_candidato: str,
+    name_candidato: str,
+    progress: float,
+    votos: int,
+    status: str,
 ):
     html_string = f"""
         <div class="card-candidato">

@@ -11,9 +11,9 @@ from shiny import App, reactive, render, ui
 
 locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
 
-url_tse = "https://resultados-sim.tse.jus.br"
-env_tse = "simulado"
-ele_tse = "10143"
+url_tse = "https://resultados.tse.jus.br"
+env_tse = "oficial"
+ele_tse = "619"
 
 refresh_time = 90  # seconds
 
@@ -208,12 +208,12 @@ def server(input, output, session):
         return [
             ui.HTML(
                 card_candidato(
-                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}",
-                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg",
-                    name_candidato = cand["n"] + " - " + cand["nm"],
-                    progress = float(cand["pvap"].replace(",", ".")),
-                    votos = int(cand["vap"]),
-                    status = cand["st"],
+                    url_candcontas=f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}",
+                    img_candidato=f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg",
+                    name_candidato=cand["n"] + " - " + cand["nm"],
+                    progress=float(cand["pvap"].replace(",", ".")),
+                    votos=int(cand["vap"]),
+                    status=cand["st"],
                 )
             )
             for cand in sort_prefeito
@@ -228,12 +228,12 @@ def server(input, output, session):
         return [
             ui.HTML(
                 card_candidato(
-                    url_candcontas = f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}",
-                    img_candidato = f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg",
-                    name_candidato = cand["n"] + " - " + cand["nm"],
-                    progress = float(cand["pvap"].replace(",", ".")),
-                    votos = int(cand["vap"]),
-                    status = cand["st"],
+                    url_candcontas=f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}",
+                    img_candidato=f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg",
+                    name_candidato=cand["n"] + " - " + cand["nm"],
+                    progress=float(cand["pvap"].replace(",", ".")),
+                    votos=int(cand["vap"]),
+                    status=cand["st"],
                 )
             )
             for cand in sort_vereador
