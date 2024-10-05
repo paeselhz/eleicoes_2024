@@ -63,11 +63,12 @@ def handle_failure():
 
 
 def create_cand_structure(cand):
-    # Simplify the creation of candidate structure
-    ret_dict = cand["par"][0]["cand"]
-    ret_dict_partido = [
-        {**cand_dict, "nm_partido": cand["nm"]} for cand_dict in ret_dict
-    ]
+    ret_dict_partido = []
+    for par in cand["par"]:
+        ret_dict = par["cand"]
+        ret_dict_partido += [
+            {**cand_dict, "nm_partido": par["nm"]} for cand_dict in ret_dict
+        ]
     return ret_dict_partido
 
 
