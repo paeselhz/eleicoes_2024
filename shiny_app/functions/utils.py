@@ -183,6 +183,8 @@ def get_municipios_data(
 
     req_url = f"{base_url}/{env}/ele{ano}/{cod_eleicao}/dados/{state}/{state}{cod_mun_tse}-c{cod_cargo}-e{cod_eleicao.zfill(6)}-u.json"
 
+    time.sleep(1)
+
     try:
         req_tse = requests.get(req_url)
         req_tse.raise_for_status()
@@ -190,8 +192,6 @@ def get_municipios_data(
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return handle_failure()
-
-    time.sleep(1)
 
     if req_tse_dict:
         list_cand_partidos = [
