@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from typing import Dict, List
 
@@ -189,6 +190,8 @@ def get_municipios_data(
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return handle_failure()
+
+    time.sleep(1)
 
     if req_tse_dict:
         list_cand_partidos = [
