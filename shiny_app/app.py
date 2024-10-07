@@ -32,7 +32,7 @@ app_ui = ui.page_fluid(
             #   ui.h3("AMBIENTE SIMULADO DO TSE")
         ),
         ui.column(6, ui.h1("Apuração Eleições 2024")),
-        ui.column(3, ui.output_text("next_update_in")),
+        # ui.column(3, ui.output_text("next_update_in")),
         style="margin-top:1rem;",
     ),
     ui.hr(),
@@ -121,16 +121,16 @@ def server(input, output, session):
                 choices=get_municipality_by_state(list_municipios, selected_state),
             )
 
-    @render.text
-    def next_update_in():
+    # @render.text
+    # def next_update_in():
 
-        reactive.invalidate_later(1)
+    #     reactive.invalidate_later(1)
 
-        minutes, seconds = calculate_time_difference(
-            data_prefeito()["timestamp"], refresh_time=refresh_time
-        )
+    #     minutes, seconds = calculate_time_difference(
+    #         data_prefeito()["timestamp"], refresh_time=refresh_time
+    #     )
 
-        return f"Próxima atualização: {minutes}m e {seconds}s"
+    #     return f"Próxima atualização: {minutes}m e {seconds}s"
 
     @render.ui
     def side_cards_kpi():
@@ -225,18 +225,35 @@ def server(input, output, session):
         st = input.select_state()
         region = find_region(st, list_states)
         sort_vereador = sorted(data_vereador()["cand"], key=lambda x: int(x["seq"]))
+        sort_vereador_leg = [
+            {
+                **cand,
+                "url_candcontas": (
+                    f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}"
+                    if cand["sqcand"]
+                    else ""
+                ),
+                "img_candidato": (
+                    f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg"
+                    if cand["sqcand"]
+                    else "https://via.placeholder.com/60x60?text=Sem+Imagem"
+                ),
+            }
+            for cand in sort_vereador
+        ]
+
         return [
             ui.HTML(
                 card_candidato(
-                    url_candcontas=f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/{region}/{st.upper()}/2045202024/{cand['sqcand']}/2024/{mun}",
-                    img_candidato=f"{url_tse}/{env_tse}/ele2024/{ele_tse}/fotos/{st}/{cand['sqcand']}.jpeg",
+                    url_candcontas=cand.get("url_candcontas"),
+                    img_candidato=cand.get("img_candidato"),
                     name_candidato=cand["n"] + " - " + cand["nm"],
                     progress=float(cand["pvap"].replace(",", ".")),
                     votos=int(cand["vap"]),
                     status=cand["st"],
                 )
             )
-            for cand in sort_vereador
+            for cand in sort_vereador_leg
         ]
 
     @render.ui

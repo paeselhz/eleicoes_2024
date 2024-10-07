@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 from typing import Dict, List
 
@@ -67,6 +66,18 @@ def create_cand_structure(cand):
     ret_dict_partido = []
     for par in cand["par"]:
         ret_dict = par["cand"]
+        if par.get("tvtl", "0") != "0":
+            ret_dict.append(
+                {
+                    "n": par["n"],
+                    "nm": par["sg"] + " - VOTO EM LEGENDA",
+                    "vap": par["tvtl"],
+                    "pvap": "0",
+                    "st": "",
+                    "sqcand": "",
+                    "seq": "99999",
+                }
+            )
         ret_dict_partido += [
             {**cand_dict, "nm_partido": par["nm"]} for cand_dict in ret_dict
         ]
@@ -177,13 +188,14 @@ def get_municipios_data(
     state: str,
     base_url: str = "https://resultados.tse.jus.br",
     env: str = "oficial",
-    ano: str = "2022",
+    ano: str = "2024",
 ) -> Dict:
     state = state.lower()
+    if state == "" or cod_mun_tse == "":
+        print("empty inputs, returning empty JSON")
+        return handle_failure()
 
     req_url = f"{base_url}/{env}/ele{ano}/{cod_eleicao}/dados/{state}/{state}{cod_mun_tse}-c{cod_cargo}-e{cod_eleicao.zfill(6)}-u.json"
-
-    time.sleep(1)
 
     try:
         req_tse = requests.get(req_url)
@@ -217,7 +229,8 @@ def card_candidato(
     votos: int,
     status: str,
 ):
-    html_string = f"""
+    if url_candcontas != "":
+        html_string = f"""
         <div class="card-candidato">
             <a href="{url_candcontas}" target="_blank">
                 <img src="{img_candidato}" alt="Candidate Image">
@@ -234,7 +247,24 @@ def card_candidato(
                 </div>
             </div>
         </div>
-    """
+        """
+    else:
+        html_string = f"""
+        <div class="card-candidato">
+                <img src="{img_candidato}" alt="Candidate Image">
+            <div class="card-candidato-content">
+                <h3>{name_candidato} 
+                    <span class="status-label {status.lower().replace(' ', '-').replace('2º', 'segundo')}">
+                        {status}
+                    </span>
+                </h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width:{progress}%;"></div>
+                    <span class="progress-value">{votos:,} votos - {progress}%</span>
+                </div>
+            </div>
+        </div>
+        """
     return html_string
 
 
