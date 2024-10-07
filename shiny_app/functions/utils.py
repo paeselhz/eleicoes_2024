@@ -75,7 +75,7 @@ def create_cand_structure(cand):
                     "pvap": "0",
                     "st": "",
                     "sqcand": "",
-                    "seq": "99999",
+                    "seq": "999" + par["n"],
                 }
             )
         ret_dict_partido += [
